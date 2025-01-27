@@ -1,9 +1,26 @@
-module "web_app" {
-source = "./modules/web_app"
-name_prefix = "luke-tfc7"
-instance_type = "t2.micro"
-instance_count = 2
-vpc_id = "vpc-012814271f30b4442"
-public_subnet = false
-alb_listener_arn =""
+module "dynamodb-table" {
+  source  = "terraform-aws-modules/dynamodb-table/aws"
+  version = "4.2.0"
+
+  name     = "luke-bookinventory"
+  hash_key = "ISBN"
+  range_key = "Genre"
+  billing_mode = "PAY_PER_REQUEST"
+
+  attributes = [
+    {
+    name = "ISBN"
+    type = "S"
+    },
+
+    {
+    name = "Genre"
+    type = "S"
+    }
+  ]
+
+  tags = {
+    Terraform   = "true"
+    Environment = "staging"
+  }
 }
