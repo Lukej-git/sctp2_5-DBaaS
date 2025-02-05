@@ -1,26 +1,29 @@
-module "dynamodb-table" {
-  source  = "terraform-aws-modules/dynamodb-table/aws"
-  version = "4.2.0"
+# DynamoDB table definition
+resource "aws_dynamodb_table" "bookinventory" {
+  name           = "${var.name_prefix}-bookinventory"
+  billing_mode   = "PAY_PER_REQUEST"
+ # Define the primary keys
+  hash_key       = "ISBN"  # Partition Key
+  range_key      = "Genre" # Sort Key
 
-  name     = "luke-bookinventory"
-  hash_key = "ISBN"
-  range_key = "Genre"
-  billing_mode = "PAY_PER_REQUEST"
-
-  attributes = [
-    {
+# Attribute definitions
+  attribute {
     name = "ISBN"
-    type = "S"
-    },
+    type = "S" # String
+  }
 
-    {
+  attribute {
     name = "Genre"
-    type = "S"
-    }
-  ]
+    type = "S" # String
+  }
+
+  # Enable server-side encryption
+  server_side_encryption {
+    enabled = true
+  }
 
   tags = {
-    Terraform   = "true"
-    Environment = "staging"
+    Environment = "Dev"
+    Name        = "BookInventoryTable"
   }
 }
